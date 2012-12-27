@@ -365,6 +365,7 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 		//downGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
         
 		[backgroundView_ addGestureRecognizer:tapGestureRecognizer];
+        [tapGestureRecognizer release];
 		//[detailView_ addGestureRecognizer:upGestureRecognizer];
 		//[self addGestureRecognizer:downGestureRecognizer];
         
@@ -1075,7 +1076,7 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
     
 	// step 2: no? -> create new cell
 	if (cell == nil) {
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID]autorelease];
         
 		cell.textLabel.font = [UIFont boldSystemFontOfSize:10];
 		cell.textLabel.textColor = [UIApplication sharedApplication].statusBarStyle == UIStatusBarStyleDefault ? kLightThemeHistoryTextColor : kDarkThemeHistoryTextColor;
