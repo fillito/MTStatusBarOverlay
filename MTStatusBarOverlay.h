@@ -46,7 +46,8 @@ typedef enum MTDetailViewMode {
 typedef enum MTMessageType {
 	MTMessageTypeActivity,				// shows actvity indicator
 	MTMessageTypeFinish,				// shows checkmark
-	MTMessageTypeError					// shows error-mark
+	MTMessageTypeError,					// shows error-mark
+    MTMessageTypeMessageNotification    // shows message icon
 } MTMessageType;
 
 
@@ -144,6 +145,9 @@ typedef enum MTMessageType {
 - (void)postMessage:(NSString *)message duration:(NSTimeInterval)duration;
 - (void)postMessage:(NSString *)message duration:(NSTimeInterval)duration animated:(BOOL)animated;
 - (void)postMessage:(NSString *)message animated:(BOOL)animated;
+
+- (void)postChatMessage:(NSString *)message duration:(NSTimeInterval)duration animated:(BOOL)animated;
+
 // clears the message queue and shows this message instantly
 - (void)postImmediateMessage:(NSString *)message animated:(BOOL)animated;
 - (void)postImmediateMessage:(NSString *)message duration:(NSTimeInterval)duration;

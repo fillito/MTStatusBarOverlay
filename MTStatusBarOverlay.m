@@ -132,6 +132,9 @@ MAX([UIApplication sharedApplication].statusBarFrame.size.width, [UIApplication 
 #define kErrorText			@"✗"
 #define kErrorFontSize		19.f
 
+// Text that is displayed in the finished-Label when the finish was successful
+#define kMessageText		@"💬"
+#define kMessageFontSize	10.f
 
 
 ///////////////////////////////////////////////////////
@@ -458,6 +461,7 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
     
 	delegate_ = nil;
+    [super dealloc];
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -519,7 +523,9 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 - (void)postMessage:(NSString *)message duration:(NSTimeInterval)duration animated:(BOOL)animated {
     [self postMessage:message type:MTMessageTypeActivity duration:duration animated:animated immediate:NO];
 }
-
+- (void)postChatMessage:(NSString *)message duration:(NSTimeInterval)duration animated:(BOOL)animated{
+    [self postMessage:message type:MTMessageTypeMessageNotification duration:duration animated:animated immediate:NO];
+}
 - (void)postImmediateMessage:(NSString *)message animated:(BOOL)animated {
 	[self postImmediateMessage:message type:MTMessageTypeActivity duration:0 animated:animated];
 }
@@ -1308,6 +1314,21 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 			// update font and text
 			self.finishedLabel.font = [UIFont boldSystemFontOfSize:kErrorFontSize];
 			self.finishedLabel.text = kErrorText;
+            self.progress = 1.0;
+			break;
+        case MTMessageTypeMessageNotification:
+			// will call hide after delay
+			self.hideInProgress = YES;
+			// show finished-label, hide acitvity indicator
+			self.finishedLabel.hidden = self.hidesActivity;
+			self.activityIndicator.hidden = YES;
+            
+			// stop activity indicator
+			[self.activityIndicator stopAnimating];
+            
+			// update font and text
+			self.finishedLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:kMessageFontSize];
+			self.finishedLabel.text = kMessageText;
             self.progress = 1.0;
 			break;
 	}
