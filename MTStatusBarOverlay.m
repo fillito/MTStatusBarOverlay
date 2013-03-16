@@ -396,28 +396,28 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 		finishedLabel_.backgroundColor = [UIColor clearColor];
 		finishedLabel_.hidden = YES;
 		finishedLabel_.text = kFinishedText;
-		finishedLabel_.textAlignment = UITextAlignmentCenter;
+		finishedLabel_.textAlignment = UITextAlignmentLeft;
 		finishedLabel_.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:kFinishedFontSize];
         finishedLabel_.adjustsFontSizeToFitWidth = YES;
 		[self addSubviewToBackgroundView:finishedLabel_];
         
 		// Status Label 1 is first visible
-		statusLabel1_ = [[UILabel alloc] initWithFrame:CGRectMake(30.f, 0.f, backgroundView_.frame.size.width - 60.f,backgroundView_.frame.size.height-1.f)];
+		statusLabel1_ = [[UILabel alloc] initWithFrame:CGRectMake(21.f, 0.f, backgroundView_.frame.size.width - 60.f,backgroundView_.frame.size.height-1.f)];
 		statusLabel1_.backgroundColor = [UIColor clearColor];
 		statusLabel1_.shadowOffset = CGSizeMake(0.f, 1.f);
 		statusLabel1_.font = [UIFont boldSystemFontOfSize:kStatusLabelSize];
-		statusLabel1_.textAlignment = UITextAlignmentCenter;
+		statusLabel1_.textAlignment = UITextAlignmentLeft;
 		statusLabel1_.numberOfLines = 1;
 		statusLabel1_.lineBreakMode = UILineBreakModeTailTruncation;
 		statusLabel1_.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		[self addSubviewToBackgroundView:statusLabel1_];
         
 		// Status Label 2 is hidden
-		statusLabel2_ = [[UILabel alloc] initWithFrame:CGRectMake(30.f, backgroundView_.frame.size.height,backgroundView_.frame.size.width - 60.f , backgroundView_.frame.size.height-1.f)];
+		statusLabel2_ = [[UILabel alloc] initWithFrame:CGRectMake(21.f, backgroundView_.frame.size.height,backgroundView_.frame.size.width - 60.f , backgroundView_.frame.size.height-1.f)];
 		statusLabel2_.shadowOffset = CGSizeMake(0.f, 1.f);
 		statusLabel2_.backgroundColor = [UIColor clearColor];
 		statusLabel2_.font = [UIFont boldSystemFontOfSize:kStatusLabelSize];
-		statusLabel2_.textAlignment = UITextAlignmentCenter;
+		statusLabel2_.textAlignment = UITextAlignmentLeft;
 		statusLabel2_.numberOfLines = 1;
 		statusLabel2_.lineBreakMode = UILineBreakModeTailTruncation;
 		statusLabel2_.autoresizingMask = UIViewAutoresizingFlexibleWidth;
