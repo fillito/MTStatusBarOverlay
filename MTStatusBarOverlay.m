@@ -174,8 +174,8 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 @property (nonatomic, strong) UIImageView *statusBarBackgroundImageView;
 @property (nonatomic, strong) UILabel *statusLabel1;
 @property (nonatomic, strong) UILabel *statusLabel2;
-@property (nonatomic, unsafe_unretained) UILabel *hiddenStatusLabel;
-@property (unsafe_unretained, nonatomic, readonly) UILabel *visibleStatusLabel;
+@property (nonatomic, weak) UILabel *hiddenStatusLabel;
+@property (weak, nonatomic, readonly) UILabel *visibleStatusLabel;
 @property (nonatomic, strong) UIImageView *progressView;
 @property (nonatomic, assign) CGRect oldBackgroundViewFrame;
 // overwrite property for read-write-access
@@ -251,7 +251,6 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 @synthesize statusBarBackgroundImageView = statusBarBackgroundImageView_;
 @synthesize statusLabel1 = statusLabel1_;
 @synthesize statusLabel2 = statusLabel2_;
-@synthesize hiddenStatusLabel = hiddenStatusLabel_;
 @synthesize progress = progress_;
 @synthesize progressView = progressView_;
 @synthesize activityIndicator = activityIndicator_;
@@ -365,7 +364,7 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 		//downGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
         
 		[backgroundView_ addGestureRecognizer:tapGestureRecognizer];
-        [tapGestureRecognizer release];
+
 		//[detailView_ addGestureRecognizer:upGestureRecognizer];
 		//[self addGestureRecognizer:downGestureRecognizer];
         
@@ -424,7 +423,7 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 		[self addSubviewToBackgroundView:statusLabel2_];
         
 		// the hidden status label at the beginning
-		hiddenStatusLabel_ = statusLabel2_;
+		_hiddenStatusLabel = statusLabel2_;
         
         progress_ = 1.0;
         progressView_ = [[UIImageView alloc] initWithFrame:statusBarBackgroundImageView_.frame];
@@ -461,8 +460,6 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
     
-	delegate_ = nil;
-    [super dealloc];
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -1076,7 +1073,7 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
     
 	// step 2: no? -> create new cell
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID]autorelease];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
         
 		cell.textLabel.font = [UIFont boldSystemFontOfSize:10];
 		cell.textLabel.textColor = [UIApplication sharedApplication].statusBarStyle == UIStatusBarStyleDefault ? kLightThemeHistoryTextColor : kDarkThemeHistoryTextColor;
