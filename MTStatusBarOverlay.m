@@ -296,6 +296,7 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 		self.alpha = 0.f;
 		self.hidden = NO;
         
+        
 		// Default Small size: just show Activity Indicator
 		smallFrame_ = CGRectMake(statusBarFrame.size.width - kWidthSmall, 0.f, kWidthSmall, statusBarFrame.size.height);
         
@@ -680,7 +681,8 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 	UIStatusBarStyle statusBarStyle = [UIApplication sharedApplication].statusBarStyle;
 	[self setStatusBarBackgroundForStyle:statusBarStyle];
 	[self setColorSchemeForStatusBarStyle:statusBarStyle messageType:messageType];
-	[self updateUIForMessageType:messageType duration:duration];
+
+    [self updateUIForMessageType:messageType duration:duration];
     
 	// if status bar is currently hidden, show it unless it is forced to hide
 	if (self.reallyHidden) {
@@ -796,6 +798,7 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 		if ([self.delegate respondsToSelector:@selector(statusBarOverlayDidHide)]) {
 			[self.delegate statusBarOverlayDidHide];
 		}
+        sharedOverlay=nil;
 	}];
 }
 
@@ -995,7 +998,7 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 						 }
                          
 						 // update status bar background
-						 [self setStatusBarBackgroundForStyle:[UIApplication sharedApplication].statusBarStyle];
+                         [self setStatusBarBackgroundForStyle:[UIApplication sharedApplication].statusBarStyle];
 					 }];
 }
 
@@ -1169,69 +1172,112 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 - (void)setStatusBarBackgroundForStyle:(UIStatusBarStyle)style {
 	// gray status bar?
 	// on iPad the Default Status Bar Style is black too
-	if (style == UIStatusBarStyleDefault && !IsIPad && !IsIPhoneEmulationMode) {
-		// choose image depending on size
-		if (self.shrinked) {
-			self.statusBarBackgroundImageView.image = [self.defaultStatusBarImageShrinked stretchableImageWithLeftCapWidth:2.0f topCapHeight:0.0f];
-		} else {
-			self.statusBarBackgroundImageView.image = [self.defaultStatusBarImage stretchableImageWithLeftCapWidth:2.0f topCapHeight:0.0f];
-		}
-		statusBarBackgroundImageView_.backgroundColor = [UIColor clearColor];
-	}
-	// black status bar? -> no image
-	else {
-		self.statusBarBackgroundImageView.image = nil;
-		statusBarBackgroundImageView_.backgroundColor = [UIColor blackColor];
-	}
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        if (style == UIStatusBarStyleDefault && !IsIPad && !IsIPhoneEmulationMode) {
+            // choose image depending on size
+            if (self.shrinked) {
+                self.statusBarBackgroundImageView.image = [self.defaultStatusBarImageShrinked stretchableImageWithLeftCapWidth:2.0f topCapHeight:0.0f];
+            } else {
+                self.statusBarBackgroundImageView.image = [self.defaultStatusBarImage stretchableImageWithLeftCapWidth:2.0f topCapHeight:0.0f];
+            }
+            statusBarBackgroundImageView_.backgroundColor = [UIColor clearColor];
+        }
+        // black status bar? -> no image
+        else {
+            self.statusBarBackgroundImageView.image = nil;
+            statusBarBackgroundImageView_.backgroundColor = [UIColor blackColor];
+        }
+    }else{
+        self.statusBarBackgroundImageView.image = nil;
+        statusBarBackgroundImageView_.backgroundColor = [UIColor blackColor];
+    }
 }
 
 - (void)setColorSchemeForStatusBarStyle:(UIStatusBarStyle)style messageType:(MTMessageType)messageType {
 	// gray status bar?
 	// on iPad the Default Status Bar Style is black too
-	if (style == UIStatusBarStyleDefault && !IsIPad && !IsIPhoneEmulationMode) {
-		// set color of labels depending on messageType
-        switch(messageType) {
-            case MTMessageTypeFinish:
-                self.statusLabel1.textColor = kLightThemeFinishedMessageTextColor;
-                self.statusLabel2.textColor = kLightThemeFinishedMessageTextColor;
-                self.finishedLabel.textColor = kLightThemeFinishedMessageTextColor;
-                self.statusLabel1.shadowColor = kLightThemeFinishedMessageShadowColor;
-                self.statusLabel2.shadowColor = kLightThemeFinishedMessageShadowColor;
-                self.finishedLabel.shadowColor = kLightThemeFinishedMessageShadowColor;
-                break;
-            case MTMessageTypeError:
-                self.statusLabel1.textColor = kLightThemeErrorMessageTextColor;
-                self.statusLabel2.textColor = kLightThemeErrorMessageTextColor;
-                self.finishedLabel.textColor = kLightThemeErrorMessageTextColor;
-                self.statusLabel1.shadowColor = kLightThemeErrorMessageShadowColor;
-                self.statusLabel2.shadowColor = kLightThemeErrorMessageShadowColor;
-                self.finishedLabel.shadowColor = kLightThemeErrorMessageShadowColor;
-                break;
-            default:
-                self.statusLabel1.textColor = kLightThemeTextColor;
-                self.statusLabel2.textColor = kLightThemeTextColor;
-                self.finishedLabel.textColor = kLightThemeTextColor;
-                self.statusLabel1.shadowColor = kLightThemeShadowColor;
-                self.statusLabel2.shadowColor = kLightThemeShadowColor;
-                self.finishedLabel.shadowColor = kLightThemeShadowColor;
-                break;
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        if (style == UIStatusBarStyleDefault && !IsIPad && !IsIPhoneEmulationMode) {
+            // set color of labels depending on messageType
+            switch(messageType) {
+                case MTMessageTypeFinish:
+                    self.statusLabel1.textColor = kLightThemeFinishedMessageTextColor;
+                    self.statusLabel2.textColor = kLightThemeFinishedMessageTextColor;
+                    self.finishedLabel.textColor = kLightThemeFinishedMessageTextColor;
+                    self.statusLabel1.shadowColor = kLightThemeFinishedMessageShadowColor;
+                    self.statusLabel2.shadowColor = kLightThemeFinishedMessageShadowColor;
+                    self.finishedLabel.shadowColor = kLightThemeFinishedMessageShadowColor;
+                    break;
+                case MTMessageTypeError:
+                    self.statusLabel1.textColor = kLightThemeErrorMessageTextColor;
+                    self.statusLabel2.textColor = kLightThemeErrorMessageTextColor;
+                    self.finishedLabel.textColor = kLightThemeErrorMessageTextColor;
+                    self.statusLabel1.shadowColor = kLightThemeErrorMessageShadowColor;
+                    self.statusLabel2.shadowColor = kLightThemeErrorMessageShadowColor;
+                    self.finishedLabel.shadowColor = kLightThemeErrorMessageShadowColor;
+                    break;
+                default:
+                    self.statusLabel1.textColor = kLightThemeTextColor;
+                    self.statusLabel2.textColor = kLightThemeTextColor;
+                    self.finishedLabel.textColor = kLightThemeTextColor;
+                    self.statusLabel1.shadowColor = kLightThemeShadowColor;
+                    self.statusLabel2.shadowColor = kLightThemeShadowColor;
+                    self.finishedLabel.shadowColor = kLightThemeShadowColor;
+                    break;
+            }
+            
+            self.activityIndicator.activityIndicatorViewStyle = kLightThemeActivityIndicatorViewStyle;
+            
+            if ([self.activityIndicator respondsToSelector:@selector(setColor:)]) {
+                [self.activityIndicator setColor:kLightThemeTextColor];
+            }
+            
+            self.detailView.backgroundColor = kLightThemeDetailViewBackgroundColor;
+            self.detailView.layer.borderColor = [kLightThemeDetailViewBorderColor CGColor];
+            self.historyTableView.separatorColor = kLightThemeDetailViewBorderColor;
+            self.detailTextView.textColor = kLightThemeHistoryTextColor;
+            
+            self.progressView.backgroundColor = [UIColor clearColor];
+            self.progressView.image = [self.defaultStatusBarImageShrinked stretchableImageWithLeftCapWidth:2.0f topCapHeight:0.0f];
+        } else {
+            // set color of labels depending on messageType
+            switch(messageType) {
+                case MTMessageTypeFinish:
+                    self.statusLabel1.textColor = kDarkThemeFinishedMessageTextColor;
+                    self.statusLabel2.textColor = kDarkThemeFinishedMessageTextColor;
+                    self.finishedLabel.textColor = kDarkThemeFinishedMessageTextColor;
+                    break;
+                case MTMessageTypeError:
+                    self.statusLabel1.textColor = kDarkThemeErrorMessageTextColor;
+                    self.statusLabel2.textColor = kDarkThemeErrorMessageTextColor;
+                    self.finishedLabel.textColor = kDarkThemeErrorMessageTextColor;
+                    break;
+                default:
+                    self.statusLabel1.textColor = kDarkThemeTextColor;
+                    self.statusLabel2.textColor = kDarkThemeTextColor;
+                    self.finishedLabel.textColor = kDarkThemeTextColor;
+                    break;
+            }
+            self.statusLabel1.shadowColor = nil;
+            self.statusLabel2.shadowColor = nil;
+            self.finishedLabel.shadowColor = nil;
+            
+            self.activityIndicator.activityIndicatorViewStyle = kDarkThemeActivityIndicatorViewStyle;
+            
+            if ([self.activityIndicator respondsToSelector:@selector(setColor:)]) {
+                [self.activityIndicator setColor:nil];
+            }
+            
+            self.detailView.backgroundColor = kDarkThemeDetailViewBackgroundColor;
+            self.detailView.layer.borderColor = [kDarkThemeDetailViewBorderColor CGColor];
+            self.historyTableView.separatorColor = kDarkThemeDetailViewBorderColor;
+            self.detailTextView.textColor = kDarkThemeHistoryTextColor;
+            
+            self.progressView.backgroundColor = kProgressViewBackgroundColor;
+            self.progressView.image = nil;
         }
-        
-		self.activityIndicator.activityIndicatorViewStyle = kLightThemeActivityIndicatorViewStyle;
-        
-        if ([self.activityIndicator respondsToSelector:@selector(setColor:)]) {
-            [self.activityIndicator setColor:kLightThemeTextColor];
-        }
-        
-		self.detailView.backgroundColor = kLightThemeDetailViewBackgroundColor;
-		self.detailView.layer.borderColor = [kLightThemeDetailViewBorderColor CGColor];
-		self.historyTableView.separatorColor = kLightThemeDetailViewBorderColor;
-		self.detailTextView.textColor = kLightThemeHistoryTextColor;
-        
-        self.progressView.backgroundColor = [UIColor clearColor];
-        self.progressView.image = [self.defaultStatusBarImageShrinked stretchableImageWithLeftCapWidth:2.0f topCapHeight:0.0f];
-	} else {
-		// set color of labels depending on messageType
+    }else{
+        // set color of labels depending on messageType
         switch(messageType) {
             case MTMessageTypeFinish:
                 self.statusLabel1.textColor = kDarkThemeFinishedMessageTextColor;
@@ -1253,20 +1299,20 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
         self.statusLabel2.shadowColor = nil;
         self.finishedLabel.shadowColor = nil;
         
-		self.activityIndicator.activityIndicatorViewStyle = kDarkThemeActivityIndicatorViewStyle;
+        self.activityIndicator.activityIndicatorViewStyle = kDarkThemeActivityIndicatorViewStyle;
         
         if ([self.activityIndicator respondsToSelector:@selector(setColor:)]) {
             [self.activityIndicator setColor:nil];
         }
         
-		self.detailView.backgroundColor = kDarkThemeDetailViewBackgroundColor;
-		self.detailView.layer.borderColor = [kDarkThemeDetailViewBorderColor CGColor];
-		self.historyTableView.separatorColor = kDarkThemeDetailViewBorderColor;
+        self.detailView.backgroundColor = kDarkThemeDetailViewBackgroundColor;
+        self.detailView.layer.borderColor = [kDarkThemeDetailViewBorderColor CGColor];
+        self.historyTableView.separatorColor = kDarkThemeDetailViewBorderColor;
         self.detailTextView.textColor = kDarkThemeHistoryTextColor;
         
         self.progressView.backgroundColor = kProgressViewBackgroundColor;
         self.progressView.image = nil;
-	}
+    }
 }
 
 - (void)updateUIForMessageType:(MTMessageType)messageType duration:(NSTimeInterval)duration {
@@ -1462,15 +1508,11 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 #pragma mark -
 #pragma mark Singleton Definitions
 ////////////////////////////////////////////////////////////////////////
-
+__strong static MTStatusBarOverlay *sharedOverlay = nil;
 + (MTStatusBarOverlay *)sharedInstance {
-    static dispatch_once_t pred;
-    __strong static MTStatusBarOverlay *sharedOverlay = nil; 
-    
-    dispatch_once(&pred, ^{ 
-        sharedOverlay = [[MTStatusBarOverlay alloc] init]; 
-    }); 
-    
+    if (!sharedOverlay) {
+        sharedOverlay = [[MTStatusBarOverlay alloc] init];
+    }
 	return sharedOverlay;
 }
 
